@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!-- thymeleaf를 사용하기 위하여 선언 -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" href="/css/bootstrap.css"></link>
+<!-- thymeleaf 문법을 사용하여 오류가 발생했을 경우 알려줌 -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.css}"></link>
+<script th:src="@{/js/jquery-3.5.1.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+
+
+</head>
+<body>
+	<div class="container">
+		
+		<h2 class="p-4 text-center">게시글 목록</h2>
+		
+		<table class="table table-hover table-striped">
+			<colgroup>
+				<col width="15%" />
+				<col width="*%" />
+				<col width="15%" />
+				<col width="20%" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>조회수</th>
+					<th>작성일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- #lists : 배열객체 -->
+				<!-- #lists.size(list)의 list는 BoardController에서 ModelAndView 클래스 객체를 통해서 View 영역으로 응답 시 넘겨준 데이터 -->
+				<!-- th:if - thymeleaf에서 사용하는 if문으로 조건이 참일 경우 실행 -->
+				<!-- th:each - 반복문 (java의 for ~ in 문과 비슷) -->
+				<!-- th:each="list - ${list}" 에서 앞에 있는 list는 아래에서 사용할 변수명, ${data} Controller에서 넘어온 데이터명 -->
+				<tr th:if="${#lists.size(data)} > 0" th:each="list : ${data}">
+					<!-- th:text - 텍스트 출력, 시작 태그와 끝 태그 사이의 텍스트 입력 -->
+					<td th:text="${list.boardIdx}"></td>
+					<td>
+						<a href="/board/openBoardDetail.do?boardIdx=" th:attrappend="href=${list.boardIdx}" th:text="${list.title}"></a>
+					</td>
+					<td th:text="${list.hitCnt}"></td>
+					<td th:text="${list.createdDatetime}"></td>
+				</tr>
+				<!-- th:unless - thymeleaf에서 사용하는 조건식 중 하나로 조건식이 거짓이면 실행 -->
+				<tr th:unless="${#lists.size(data)} > 0">
+					<td colspan="4">조회된 결과가 없습니다.</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="d-flex justify-content-end">
+        <a href="/board/openBoardWrite.do" class="btn btn-primary">글 쓰기</a>
+      	</div>
+		
+		<div>
+			<nav th:replace="board/fragments/common :: pagination"></nav>
+		</div>
+
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			function movePage(uri, queryString) {
+				location.href = uri + queryString;
+			}
+			/*]]>*/
+		</script>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

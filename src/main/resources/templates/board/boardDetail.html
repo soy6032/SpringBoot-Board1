@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시글 상세보기</title>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.css}"></link>
+
+<script th:src="@{/js/jquery-3.5.1.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/* 목록으로 버튼 클릭 시 목록으로 이동 */
+		$("#btnList").on("click", function() {
+			/* 자바스크립트의 location을 사용하여 페이지 이동 */
+			location.href = "openBoardList.do";
+		});
+		
+		/* 수정하기 버튼 클릭 시 Controller의 updateBoard.do 로 이동 */
+		$("#btnEdit").on("click", function() {
+			/* html 태그의 form 태그를 호출하여 action 속성의 값을 변경하고 서버로 데이터 전송 */
+			var frm = $("#frm")[0];
+			frm.action = "updateBoard.do";
+			frm.submit();
+		});
+		
+		/* 수정하기 버튼 클릭 시 Controller의 deleteBoard.do 로 이동 */
+		$("#btnDel").on("click", function() {
+			/* html 태그의 form 태그를 호출하여 action 속성의 값을 변경하고 서버로 데이터 전송 */
+			var frm = $("#frm")[0];
+			frm.action = "deleteBoard.do";
+			frm.submit();
+		});
+	});
+</script>
+
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h2>게시글 상세보기</h2>
+		</div>
+		<form id="frm" method="POST">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td>글 번호</td>
+						<td th:text="${board.boardIdx}"></td>
+						<td>조회수</td>
+						<td th:text="${board.hitCnt}"></td>
+					</tr>
+					<tr>
+						<td>작성자</td>
+						<td th:text="${board.createdId}"></td>
+						<td>작성일</td>
+						<td th:text="${board.createdDatetime}"></td>
+					</tr>
+					<tr>
+						<td>제목</td>
+						<td colspan="3">
+							<input type="text" id="title" name="title" th:value="${board.title}" class="form-control w-100">
+						</td>
+					</tr>
+					<tr>                 
+						<td colspan="4">
+							<textarea title="내용" id="contents" name="contents" th:text="${board.contents}" class="form-control" rows="8"></textarea>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr th:each="list : ${board.fileList}">
+						<td colspan="4">
+							<a th:text="|${list.originalFileName}(${list.fileSize}kb)|"></a>
+							<img th:src="@{''}+${list.storedFilePath}" width="200">
+						</td>                     
+					</tr>
+					<tr>                    
+					</tr>
+				</tfoot>         
+			</table>
+			<input type="hidden" name="boardIdx" th:value="${board.boardIdx}">
+			<div class="d-flex justify-content-end">
+				<button type="button" class="btn btn-primary" id="btnList">목록으로</button>
+				<button type="button" class="btn btn-success ml-2" id="btnEdit">수정하기</button>
+				<button type="button" class="btn btn-danger ml-2" id="btnDel">삭제하기</button>
+			</div>
+		</form>
+	</div>
+	
+	
+	
+</body>
+</html>
